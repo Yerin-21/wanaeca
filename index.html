@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국민내일배움카드 발급 자격 진단</title>
+    <style>
+        /* 기본 스타일 */
+        :root { --primary: #3498db; --danger: #e74c3c; --success: #2ecc71; --bg: #f0f2f5; --text-dark: #2c3e50; }
+        body { 
+            font-family: 'Pretendard', -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            color: var(--text-dark);
+        }
+        .card { 
+            background: white; 
+            width: 92%; 
+            max-width: 500px; 
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            text-align: center; 
+            box-sizing: border-box;
+        }
+
+        /* 인트로 화면 스타일 */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+        .logo { margin-bottom: 20px; }
+        .logo img { width: 180px; height: auto; display: block; } /* 로고 사이즈 조절 */
+        
+        #intro-screen h1 { 
+            font-size: 1.8rem; 
+            font-weight: bold; 
+            margin-bottom: 35px; 
+            line-height: 1.4;
+            color: #1a1a1a;
+        }
+        
+        /* GO 버튼 스타일 수정 */
+        #intro-screen .go-button {
+            background-color: #4a7dca;
+            color: white;
+            padding: 10px 60px; /* 높이를 줄이기 위해 상하 패딩 축소 */
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #intro-screen .go-button:hover { background-color: #3b6bb2; }
+
+        /* 퀴즈 콘텐츠 스타일 */
+        #quiz-content { display: none; }
+        .progress { font-size: 0.9em; color: #aaa; margin-bottom: 15px; font-weight: 600; }
+        .question { font-size: 1.2rem; font-weight: bold; margin-bottom: 25px; line-height: 1.6; min-height: 100px; color: var(--text-dark); word-break: keep-all; }
+        .example-box { font-size: 0.85rem; color: #666; background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 4px solid #ddd; }
+        .btn-group { display: flex; gap: 12px; justify-content: center; }
+        .quiz-btn { flex: 1; padding: 18px; border: none; border-radius: 12px; font-size: 1.1em; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        .btn-yes { background-color: #fee2e2; color: #dc2626; }
+        .btn-no { background-color: var(--primary); color: white; }
+        .btn-yes:hover { background-color: #fecaca; }
+        .btn-no:hover { background-color: #2980b9; }
+
+        /* 결과 페이지 스타일 */
+        #result-page { display: none; }
+        #result-page h2 { font-size: 1.6rem; margin-bottom: 15px; }
+        .result-desc { font-size: 0.95rem; color: #444; background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: left; margin-top: 20px; line-height: 1.7; }
+        .restart { margin-top: 25px; background: #64748b; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div id="intro-screen">
+        <div class="logo">
+            <img src="와내카 로고.JPG" alt="로고">
+        </div>
+        <h1>국민내일배움카드<br>발급 대상자 여부<br>확인하기</h1>
+        <button class="go-button" onclick="startQuiz()">GO</button>
+    </div>
+
+    <div id="quiz-content">
+        <div class="progress" id="progress">질문 1 / 11</div>
+        <div class="question" id="question-text">공무원 또는 사립학교 교직원이신가요?</div>
+        <div id="example-container"></div>
+        <div class="btn-group">
+            <button class="quiz-btn btn-yes" onclick="showResult(false)">예</button>
+            <button class="quiz-btn btn-no" onclick="nextQuestion()">아니오</button>
+        </div>
+    </div>
+
+    <div id="result-page">
+        <h2 id="result-title"></h2>
+        <div id="result-desc" class="result-desc"></div>
+        <button class="restart" onclick="location.reload()">다시 처음부터</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "공무원 또는 사립학교 교직원이신가요?", ex: "" },
+        { q: "연령이 만 75세 이상이신가요?", ex: "" },
+        { q: "졸업까지 남은 수업연한이 2년 이상인 대학/대학원생 또는 고교 1~2학년이신가요?", ex: "" },
+        { q: "대규모 기업 근로자로서 월 임금 300만원 이상이고, 만 45세 미만이신가요?", ex: "" },
+        { 
+            q: "월 소득 500만원 이상의 특수형태근로종사자이신가요?", 
+            ex: "예시: 보험모집인, 학습지 교사, 택배/퀵 기사, 배달 라이더, 대리운전, 골프장 캐디, 방문판매원, 강사, 프리랜서 등" 
+        },
+        { q: "법인대표로서 사업기간 1년 미만 또는 월 소득 300만원 이상이신가요?", ex: "" },
+        { q: "자영업자로서 사업기간 1년 미만 또는 연 매출 4억 이상이신가요?", ex: "" },
+        { q: "월 소득 300만원 이상의 비영리단체 대표이신가요?", ex: "" },
+        { q: "현재 생계급여를 받고 계신가요?", ex: "단, 조건부 수급자 또는 조건부과 유예자는 지원 가능하므로 '아니오'를 선택하세요." },
+        { q: "타 부처 또는 지자체로부터 교육/훈련비를 지원받고 계신가요?", ex: "" },
+        { q: "부정수급으로 인한 제한 기간 중이거나 지원금을 반환하지 않은 상태인가요?", ex: "" }
+    ];
+
+    let currentStep = 0;
+
+    function startQuiz() {
+        document.getElementById('intro-screen').style.display = 'none';
+        document.getElementById('quiz-content').style.display = 'block';
+        updateQuestion();
+    }
+
+    function updateQuestion() {
+        const item = questions[currentStep];
+        document.getElementById('progress').innerText = `질문 ${currentStep + 1} / ${questions.length}`;
+        document.getElementById('question-text').innerText = item.q;
+        
+        const exContainer = document.getElementById('example-container');
+        if (item.ex) {
+            exContainer.innerHTML = `<div class="example-box"><strong>참고:</strong> ${item.ex}</div>`;
+        } else {
+            exContainer.innerHTML = "";
+        }
+    }
+
+    function nextQuestion() {
+        currentStep++;
+        if (currentStep < questions.length) {
+            updateQuestion();
+        } else {
+            showResult(true);
+        }
+    }
+
+    function showResult(isEligible) {
+        document.getElementById('quiz-content').style.display = 'none';
+        const resultPage = document.getElementById('result-page');
+        const title = document.getElementById('result-title');
+        const desc = document.getElementById('result-desc');
+        
+        resultPage.style.display = 'block';
+
+        if (isEligible) {
+            title.innerText = "🎉 발급 가능 대상자";
+            title.style.color = "var(--success)";
+            desc.innerHTML = "축하합니다! 입력하신 조건으로는 카드 발급이 가능할 것으로 보입니다.<br><br><strong>다음 단계:</strong><br>고용노동부 고용24 홈페이지 또는 가까운 고용센터를 방문하여 신청해 주세요.";
+        } else {
+            title.innerText = "❌ 발급 제외 대상";
+            title.style.color = "var(--danger)";
+            desc.innerHTML = "아쉽게도 선택하신 항목은 국민내일배움카드 지원 제외 대상에 해당합니다.<br><br><strong>참고:</strong><br>본 진단 결과는 법적 효력이 없으며, 정확한 상담은 고용노동부(국번없이 1350)를 통해 확인하시기 바랍니다.";
+        }
+    }
+</script>
+
+</body>
+</html>
