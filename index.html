@@ -37,7 +37,7 @@
             min-height: 400px;
         }
         .logo { margin-bottom: 20px; }
-        .logo img { width: 180px; height: auto; display: block; } /* 로고 사이즈 조절 */
+        .logo img { width: 180px; height: auto; display: block; } 
         
         #intro-screen h1 { 
             font-size: 1.8rem; 
@@ -47,11 +47,10 @@
             color: #1a1a1a;
         }
         
-        /* GO 버튼 스타일 수정 */
         #intro-screen .go-button {
             background-color: #4a7dca;
             color: white;
-            padding: 10px 60px; /* 높이를 줄이기 위해 상하 패딩 축소 */
+            padding: 10px 60px;
             border-radius: 8px;
             font-size: 1.1rem;
             font-weight: bold;
@@ -74,7 +73,7 @@
         .btn-yes:hover { background-color: #fecaca; }
         .btn-no:hover { background-color: #2980b9; }
 
-/* 결과 페이지 스타일 */
+        /* 결과 페이지 스타일 */
         #result-page { display: none; }
         #result-page h2 { font-size: 1.6rem; margin-bottom: 15px; }
         .result-desc { font-size: 0.95rem; color: #444; background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: left; margin-top: 20px; line-height: 1.7; }
@@ -121,7 +120,7 @@
     <div id="result-page">
         <h2 id="result-title"></h2>
         <div id="result-desc" class="result-desc"></div>
-        <button class="restart" onclick="location.reload()">다시 처음부터</button>
+        <a href="https://www.work24.go.kr/cm/main.do" class="external-link" target="_blank">고용24 바로가기</a>
     </div>
 </div>
 
@@ -173,26 +172,22 @@
         }
     }
 
-function showResult(isEligible) {
+    function showResult(isEligible) {
         document.getElementById('quiz-content').style.display = 'none';
         const resultPage = document.getElementById('result-page');
         const title = document.getElementById('result-title');
         const desc = document.getElementById('result-desc');
         
         resultPage.style.display = 'block';
-        
-        // 중앙 정렬 스타일 추가
         desc.style.textAlign = "center"; 
 
         if (isEligible) {
             title.innerText = "🎉 발급 가능 대상자";
             title.style.color = "var(--success)";
-            // 요청하신 줄바꿈 적용
-            desc.innerHTML = "축하합니다!<br>입력하신 조건으로는 카드 발급이<br>가능할 것으로 보입니다.<br><br><strong>&lt;다음단계&gt;</strong><br>고용노동부 HRD-Net 홈페이지 또는<br>가까운 고용센터를 방문하여<br>신청해 주세요.";
+            desc.innerHTML = "축하합니다!<br>입력하신 조건으로는 카드 발급이<br>가능할 것으로 보입니다.<br><br><strong>&lt;다음단계&gt;</strong><br>고용노동부 고용24 홈페이지 또는<br>가까운 고용센터를 방문하여<br>신청해 주세요.";
         } else {
             title.innerText = "❌ 발급 제외 대상";
             title.style.color = "var(--danger)";
-            // 요청하신 줄바꿈 적용
             desc.innerHTML = "아쉽게도 선택하신 항목은<br>국민내일배움카드 지원 제외 대상에 해당합니다.<br><br><strong>&lt;참고&gt;</strong><br>본 진단 결과는 법적 효력이 없으며,<br>정확한 상담은 고용노동부(국번없이 1350)를 통해<br> 확인하시기 바랍니다.";
         }
     }
@@ -200,8 +195,3 @@ function showResult(isEligible) {
 
 </body>
 </html>
-
-
-
-
-
