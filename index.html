@@ -74,11 +74,27 @@
         .btn-yes:hover { background-color: #fecaca; }
         .btn-no:hover { background-color: #2980b9; }
 
-        /* 결과 페이지 스타일 */
+/* 결과 페이지 스타일 */
         #result-page { display: none; }
         #result-page h2 { font-size: 1.6rem; margin-bottom: 15px; }
         .result-desc { font-size: 0.95rem; color: #444; background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: left; margin-top: 20px; line-height: 1.7; }
-        .restart { margin-top: 25px; background: #64748b; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; }
+        
+        /* 고용24 바로가기 버튼 스타일 */
+        .external-link { 
+            display: inline-block;
+            margin-top: 25px; 
+            background: #1e293b; 
+            color: white; 
+            border: none; 
+            padding: 14px 30px; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .external-link:hover { background: #0f172a; }
     </style>
 </head>
 <body>
@@ -184,6 +200,7 @@ function showResult(isEligible) {
 
 </body>
 </html>
+
 
 
 
