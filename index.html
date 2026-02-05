@@ -157,26 +157,30 @@
         }
     }
 
-    function showResult(isEligible) {
+function showResult(isEligible) {
         document.getElementById('quiz-content').style.display = 'none';
         const resultPage = document.getElementById('result-page');
         const title = document.getElementById('result-title');
         const desc = document.getElementById('result-desc');
         
         resultPage.style.display = 'block';
+        
+        // 중앙 정렬 스타일 추가
+        desc.style.textAlign = "center"; 
 
         if (isEligible) {
             title.innerText = "🎉 발급 가능 대상자";
             title.style.color = "var(--success)";
-            desc.innerHTML = "축하합니다! 입력하신 조건으로는 카드 발급이 가능할 것으로 보입니다.<br><br><strong>다음 단계:</strong><br>고용노동부 고용24 홈페이지 또는 가까운 고용센터를 방문하여 신청해 주세요.";
+            // 요청하신 줄바꿈 적용
+            desc.innerHTML = "축하합니다!<br>입력하신 조건으로는 카드 발급이 가능할 것으로 보입니다.<br><br><strong>&lt;다음단계&gt;</strong><br>고용노동부 HRD-Net 홈페이지 또는 가까운 고용센터를 방문하여<br>신청해 주세요.";
         } else {
             title.innerText = "❌ 발급 제외 대상";
             title.style.color = "var(--danger)";
-            desc.innerHTML = "아쉽게도 선택하신 항목은 국민내일배움카드 지원 제외 대상에 해당합니다.<br><br><strong>참고:</strong><br>본 진단 결과는 법적 효력이 없으며, 정확한 상담은 고용노동부(국번없이 1350)를 통해 확인하시기 바랍니다.";
+            // 요청하신 줄바꿈 적용
+            desc.innerHTML = "아쉽게도 선택하신 항목은<br>국민내일배움카드 지원 제외 대상에 해당합니다.<br><br><strong>&lt;참고&gt;</strong><br>본 진단 결과는 법적 효력이 없으며, 정확한 상담은<br>고용노동부(국번없이 1350)를 통해 확인하시기 바랍니다.";
         }
     }
 </script>
 
 </body>
-
 </html>
