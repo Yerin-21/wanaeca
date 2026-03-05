@@ -64,21 +64,56 @@
         /* 퀴즈 콘텐츠 스타일 */
         #quiz-content { display: none; }
         .progress { font-size: 0.9em; color: #aaa; margin-bottom: 15px; font-weight: 600; }
-        .question { font-size: 1.2rem; font-weight: bold; margin-bottom: 25px; line-height: 1.6; min-height: 100px; color: var(--text-dark); word-break: keep-all; }
-        .example-box { font-size: 0.85rem; color: #666; background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 20px; text-align: left; border-left: 4px solid #ddd; }
-        .btn-group { display: flex; gap: 12px; justify-content: center; }
-        .quiz-btn { flex: 1; padding: 18px; border: none; border-radius: 12px; font-size: 1.1em; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        
+        .question { 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            margin-bottom: 15px;
+            line-height: 1.6; 
+            min-height: 60px;
+            color: var(--text-dark); 
+            word-break: keep-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .example-box { 
+            font-size: 0.85rem; 
+            color: #666; 
+            background: #f8f9fa; 
+            padding: 12px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            text-align: left; 
+            border-left: 4px solid #ddd;
+            margin-top: -5px;
+        }
+
+        .btn-group { display: flex; gap: 12px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .quiz-btn { flex: 1; padding: 18px; border: none; border-radius: 12px; font-size: 1.1em; cursor: pointer; transition: 0.2s; font-weight: bold; min-width: 120px; }
         .btn-yes { background-color: #fee2e2; color: #dc2626; }
         .btn-no { background-color: var(--primary); color: white; }
-        .btn-yes:hover { background-color: #fecaca; }
-        .btn-no:hover { background-color: #2980b9; }
+        
+        /* 이전 버튼 스타일 */
+        .btn-prev { 
+            width: 100%; 
+            background-color: #eee; 
+            color: #888; 
+            padding: 12px; 
+            margin-top: 10px; 
+            font-size: 0.9em;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-prev:hover { background-color: #e5e5e5; }
 
         /* 결과 페이지 스타일 */
         #result-page { display: none; }
         #result-page h2 { font-size: 1.6rem; margin-bottom: 15px; }
-        .result-desc { font-size: 0.95rem; color: #444; background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: left; margin-top: 20px; line-height: 1.7; }
+        .result-desc { font-size: 0.95rem; color: #444; background: #f1f5f9; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; line-height: 1.7; }
         
-        /* 고용24 바로가기 버튼 스타일 */
         .external-link { 
             display: inline-block;
             margin-top: 25px; 
@@ -115,6 +150,7 @@
             <button class="quiz-btn btn-yes" onclick="showResult(false)">예</button>
             <button class="quiz-btn btn-no" onclick="nextQuestion()">아니오</button>
         </div>
+        <button id="prev-btn" class="btn-prev" onclick="prevQuestion()" style="display: none;">이전 문항으로</button>
     </div>
 
     <div id="result-page">
@@ -161,6 +197,14 @@
         } else {
             exContainer.innerHTML = "";
         }
+
+        // 첫 번째 질문이 아니면 '이전' 버튼 표시
+        const prevBtn = document.getElementById('prev-btn');
+        if (currentStep > 0) {
+            prevBtn.style.display = 'block';
+        } else {
+            prevBtn.style.display = 'none';
+        }
     }
 
     function nextQuestion() {
@@ -169,6 +213,14 @@
             updateQuestion();
         } else {
             showResult(true);
+        }
+    }
+
+    // 이전 문항으로 돌아가는 함수 추가
+    function prevQuestion() {
+        if (currentStep > 0) {
+            currentStep--;
+            updateQuestion();
         }
     }
 
